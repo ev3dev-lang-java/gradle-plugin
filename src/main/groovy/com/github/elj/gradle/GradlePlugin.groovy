@@ -131,20 +131,26 @@ exec ${ext.getJavaCommand(true)}
                 dependsOn "clean", "templateWrapper", "${-> ext.pref.slimJar ? "jar" : "shadowJar"}"
 
                 doLast({ task ->
+                    SSH ssh = null
+                    SFTP sftp = null
                     try {
-                        new SSH(ext).withCloseable {
-                            it.openFileMode().withCloseable {
-                                mkdir ext.paths.wrapperDir
-                                mkdir ext.paths.programDir
-                                mkdir ext.paths.splashDir
+                        ssh = new SSH(ext);
+                        sftp = ssh.openFileMode();
 
-                                put ext.localProgramPath(), ext.brickProgramPath(), 0644
-                                put ext.localSplashPath(), ext.brickSplashPath(), 0644
-                                put ext.localWrapperPath(), ext.brickWrapperPath(), 0755
-                            }
+                        sftp.with {
+                            mkdir ext.paths.wrapperDir
+                            mkdir ext.paths.programDir
+                            mkdir ext.paths.splashDir
+
+                            put ext.localProgramPath(), ext.brickProgramPath(), 0644
+                            put ext.localSplashPath(), ext.brickSplashPath(), 0644
+                            put ext.localWrapperPath(), ext.brickWrapperPath(), 0755
                         }
                     } catch (Exception e) {
                         throw new GradleException("Program upload failed.", e)
+                    } finally {
+                        sftp?.close()
+                        ssh?.close()
                     }
                 })
             }
