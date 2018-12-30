@@ -134,11 +134,15 @@ class GradlePlugin implements Plugin<Project> {
                         sftp = ssh.openFileMode();
 
                         sftp.with {
-                            ext.build.uploads(proj, ext).each {
-                                int slash = it.destination.lastIndexOf('/')
-                                String destDir = it.destination.substring(slash + 1)
+                            mkdir ext.paths.wrapperDir
+                            mkdir ext.paths.splashDir
+                            mkdir ext.paths.programDir
 
-                                mkdir destDir
+                            put ext.localProgramPath(), ext.brickProgramPath(), 0644
+                            put ext.localSplashPath(), ext.brickSplashPath(), 0644
+                            put ext.localWrapperPath(), ext.brickWrapperPath(), 0755
+
+                            ext.build.uploads(proj, ext).each {
                                 put it.source, it.destination, it.mode
                             }
                         }

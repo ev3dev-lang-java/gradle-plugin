@@ -18,21 +18,6 @@ exec ${ext.getJavaCommand(true)}
     }
 
     def uploads = { Project proj, Extension ext ->
-        def list = []
-
-        list += new Upload(
-                ext.localProgramPath(),
-                ext.brickProgramPath(),
-                0644)
-        list += new Upload(
-                ext.localSplashPath(),
-                ext.brickSplashPath(),
-                0644)
-        list += new Upload(
-                ext.localWrapperPath(),
-                ext.brickWrapperPath(),
-                0755)
-
-        return list
+        return []
     }
 }
