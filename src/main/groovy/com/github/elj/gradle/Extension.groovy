@@ -13,12 +13,14 @@ class Extension {
 
     Preferences pref = null
     PathPreferences paths = null
+    BuildPreferences build = null
 
     @Inject
     Extension(Project mainProj) {
         proj = mainProj
         pref = mainProj.objects.newInstance(Preferences)
         paths = mainProj.objects.newInstance(PathPreferences)
+        build = mainProj.objects.newInstance(BuildPreferences)
     }
 
     void pref(Action<? super Preferences> action) {
@@ -27,6 +29,10 @@ class Extension {
 
     void paths(Action<? super PathPreferences> action) {
         action.execute(paths)
+    }
+
+    void build(Action<? super PathPreferences> action) {
+        build.execute(paths)
     }
 
 
@@ -56,7 +62,7 @@ class Extension {
     }
 
     Path localSplashPath() {
-        return Paths.get(proj.projectDir.toString(), "gradle", "splash.txt")
+        return build.splashPath(proj, this)
     }
 
     String getJavaCommand(boolean wrapper) {

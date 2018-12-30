@@ -110,11 +110,7 @@ class GradlePlugin implements Plugin<Project> {
                 setGroup group
                 setDescription "Generate shell script wrapper for the program."
                 doLast({ task ->
-                    String contents = """
-#!/bin/sh
-cat ${ext.brickSplashPath()}
-exec ${ext.getJavaCommand(true)}
-"""
+                    String contents = ext.build.templateWrapper(proj, ext)
 
                     try {
                         Files.write(Paths.get(proj.buildDir.toString(), "launcher.sh"),
@@ -138,13 +134,13 @@ exec ${ext.getJavaCommand(true)}
                         sftp = ssh.openFileMode();
 
                         sftp.with {
-                            mkdir ext.paths.wrapperDir
-                            mkdir ext.paths.programDir
-                            mkdir ext.paths.splashDir
+                            ext.build.uploads(proj, ext).each {
+                                int slash = it.destination.lastIndexOf('/')
+                                String destDir = it.destination.substring(slash + 1)
 
-                            put ext.localProgramPath(), ext.brickProgramPath(), 0644
-                            put ext.localSplashPath(), ext.brickSplashPath(), 0644
-                            put ext.localWrapperPath(), ext.brickWrapperPath(), 0755
+                                mkdir destDir
+                                put it.source, it.destination, it.mode
+                            }
                         }
                     } catch (Exception e) {
                         throw new GradleException("Program upload failed.", e)
