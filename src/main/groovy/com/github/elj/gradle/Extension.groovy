@@ -15,10 +15,10 @@ class Extension {
     PathPreferences paths = null
 
     @Inject
-    Extension(Project proj) {
-        this.proj = proj
-        this.pref = proj.objects.newInstance(Preferences)
-        this.paths = proj.objects.newInstance(PathPreferences)
+    Extension(Project mainProj) {
+        proj = mainProj
+        pref = mainProj.objects.newInstance(Preferences)
+        paths = mainProj.objects.newInstance(PathPreferences)
     }
 
     void pref(Action<? super Preferences> action) {
@@ -125,11 +125,11 @@ class Extension {
     }
 
     RemoteCommandTask createCommandTask(String grpName, String name, commands, String desc) {
-        def tsk = proj.tasks.create(name, RemoteCommandTask)
-        tsk.setCommands commands
-        tsk.setGroup grpName
-        tsk.setDescription desc
-        return tsk
+        return proj.tasks.create(name, RemoteCommandTask).tap {
+            setCommands commands
+            setGroup grpName
+            setDescription desc
+        }
     }
 
     RemoteCommandTask createSudoCommandTask(String grpName, String name, commands, String desc) {

@@ -22,13 +22,9 @@ class RemoteCommandTask extends DefaultTask {
 
             String echoCmd = "echo \"" + msg.replaceAll("\"", "\\\\\"") + "\""
 
-            SSH ssh = null
-            try {
-                ssh = new SSH(ext)
-                ssh.runStdio echoCmd
-                ssh.runStdio command
-            } finally {
-                ssh?.close();
+            new SSH(ext).withCloseable {
+                runStdio echoCmd
+                runStdio command
             }
         }
     }
