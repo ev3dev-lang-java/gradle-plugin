@@ -16,10 +16,11 @@ class SSH implements AutoCloseable {
     }
 
     SSH(String host, String user, String password, int timeout) {
-        sess = ssh.getSession(user, host).tap {
+        sess = ssh.getSession(user, host).with {
             setPassword(password)
             setConfig("StrictHostKeyChecking", "no")
             connect(timeout)
+            return it
         }
     }
 

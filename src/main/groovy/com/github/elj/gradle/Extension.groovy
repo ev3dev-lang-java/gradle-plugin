@@ -125,10 +125,11 @@ class Extension {
     }
 
     RemoteCommandTask cmdTask(String grpName, String name, commands, String desc) {
-        return proj.tasks.create(name, RemoteCommandTask).tap {
+        return proj.tasks.create(name, RemoteCommandTask).with {
             setCommands commands
             setGroup grpName
             setDescription desc
+            return it
         }
     }
 
