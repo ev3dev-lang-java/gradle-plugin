@@ -124,7 +124,7 @@ class Extension {
         }
     }
 
-    RemoteCommandTask createCommandTask(String grpName, String name, commands, String desc) {
+    RemoteCommandTask cmdTask(String grpName, String name, commands, String desc) {
         return proj.tasks.create(name, RemoteCommandTask).tap {
             setCommands commands
             setGroup grpName
@@ -132,25 +132,25 @@ class Extension {
         }
     }
 
-    RemoteCommandTask createSudoCommandTask(String grpName, String name, commands, String desc) {
+    RemoteCommandTask sudoTask(String grpName, String name, commands, String desc) {
         def list = []
 
         commands.each {
             list += "echo -e \"${-> pref.brickPassword}\" | sudo -S ${-> it.toString()}"
         }
 
-        return createCommandTask(grpName, name, list, desc)
+        return cmdTask(grpName, name, list, desc)
     }
 
-    void createServiceTasks(String grpName, String serviceName) {
-        createServiceTask(grpName, serviceName, "stop")
-        createServiceTask(grpName, serviceName, "restart")
+    void serviceTask(String grpName, String serviceName) {
+        serviceTask(grpName, serviceName, "stop")
+        serviceTask(grpName, serviceName, "restart")
     }
 
-    RemoteCommandTask createServiceTask(String grpName, String serviceName, String action) {
+    RemoteCommandTask serviceTask(String grpName, String serviceName, String action) {
         String taskName = action + serviceName.capitalize()
         String taskDesc = "${action.capitalize()} the $serviceName service."
 
-        return createSudoCommandTask(grpName, taskName, ["systemctl $action $serviceName"], taskDesc)
+        return sudoTask(grpName, taskName, ["systemctl $action $serviceName"], taskDesc)
     }
 }

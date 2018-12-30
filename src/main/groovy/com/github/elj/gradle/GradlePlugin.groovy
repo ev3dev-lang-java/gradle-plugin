@@ -28,7 +28,7 @@ class GradlePlugin implements Plugin<Project> {
         final String group = "ELJ-Installer"
 
         ext.with {
-            createCommandTask(group, "getInstaller",
+            cmdTask(group, "getInstaller",
                     [
                             "mkdir -p /home/robot/java",
                             "/bin/sh -c \"if grep -i jessie /etc/os-release; then wget https://raw.githubusercontent.com/ev3dev-lang-java/installer/master/installer-jessie.sh -O /home/robot/java/installer.sh; else wget https://raw.githubusercontent.com/ev3dev-lang-java/installer/master/installer.sh -O /home/robot/java/installer.sh; fi\"",
@@ -36,31 +36,31 @@ class GradlePlugin implements Plugin<Project> {
                     ],
                     "Download component installer on the brick.")
 
-            createSudoCommandTask(group, "updateAPT",
+            sudoTask(group, "updateAPT",
                     ["/home/robot/java/installer.sh update"],
                     "Update APT repositories.")
 
-            createCommandTask(group, "helpInstall",
+            cmdTask(group, "helpInstall",
                     ["/home/robot/java/installer.sh help"],
                     "Print the installer help.")
 
-            createSudoCommandTask(group, "installJava",
+            sudoTask(group, "installJava",
                     ["/home/robot/java/installer.sh java"],
                     "Install Java on the brick.")
 
-            createSudoCommandTask(group, "installOpenCV",
+            sudoTask(group, "installOpenCV",
                     ["/home/robot/java/installer.sh opencv"],
                     "Install OpenCV libraries on the brick.")
 
-            createSudoCommandTask(group, "installRXTX",
+            sudoTask(group, "installRXTX",
                     ["/home/robot/java/installer.sh rxtx"],
                     "Install RXTX library on the brick.")
 
-            createSudoCommandTask(group, "installJavaLibraries",
+            sudoTask(group, "installJavaLibraries",
                     ["/home/robot/java/installer.sh javaLibs"],
                     "Install Java libraries on the brick.")
 
-            createCommandTask(group, "javaVersion",
+            cmdTask(group, "javaVersion",
                     ["java -version"],
                     "Print Java version which is present on the brick.")
         }
@@ -71,19 +71,19 @@ class GradlePlugin implements Plugin<Project> {
         String group = "ELJ-System"
 
         ext.with {
-            createServiceTasks(group, "bluetooth")
-            createServiceTasks(group, "ntp")
-            createServiceTasks(group, "nmbd")
-            createServiceTasks(group, "brickman")
-            createCommandTask(group, "getDebianDistro",
+            serviceTask(group, "bluetooth")
+            serviceTask(group, "ntp")
+            serviceTask(group, "nmbd")
+            serviceTask(group, "brickman")
+            cmdTask(group, "getDebianDistro",
                     ["cat /etc/os-release"], "Get the /etc/os-release file from the brick")
-            createCommandTask(group, "free",
+            cmdTask(group, "free",
                     ["free"], "Print free memory summary.")
-            createCommandTask(group, "ps",
+            cmdTask(group, "ps",
                     ["ps aux | sort -n -k 4"], "Print list of running processes.")
-            createSudoCommandTask(group, "shutdown",
+            sudoTask(group, "shutdown",
                     ["shutdown -h now"], "Shutdown the brick.")
-            createCommandTask(group, "ev3devInfo",
+            cmdTask(group, "ev3devInfo",
                     ["ev3dev-sysinfo -m"], "Get output of ev3dev-sysinfo -m.")
         }
     }
@@ -92,15 +92,15 @@ class GradlePlugin implements Plugin<Project> {
         String group = "ELJ-Deployment"
 
         ext.with {
-            createCommandTask(group, "testConnection",
+            cmdTask(group, "testConnection",
                     ["ls"], "Test connection to the brick.")
-            createCommandTask(group, "pkillJava",
+            cmdTask(group, "pkillJava",
                     ["pkill java"], "Kill running Java instances.")
-            createCommandTask(group, "undeploy",
+            cmdTask(group, "undeploy",
                     ["rm -f ${-> ext.brickProgramPath()} ${-> ext.brickWrapperPath()} ${-> ext.brickSplashPath()}"],
                     "Remove previously uploaded JAR.")
 
-            createCommandTask(group, "run",
+            cmdTask(group, "run",
                     ["${-> ext.getJavaCommand(false)}"],
                     "Run the program that is currently loaded on the brick.")
         }
