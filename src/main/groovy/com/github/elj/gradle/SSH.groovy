@@ -43,7 +43,7 @@ class SSH implements AutoCloseable {
                 }
             }
             if (getExitStatus() != 0) {
-                throw new GradleException("Remote command returned failure: " + chan.getExitStatus())
+                throw new GradleException("Remote command returned failure: " + getExitStatus())
             }
         }
     }
