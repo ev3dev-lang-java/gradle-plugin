@@ -117,7 +117,7 @@ class GradlePlugin implements Plugin<Project> {
                         Files.write(Paths.get(proj.buildDir.toString(), "launcher.sh"),
                                 contents.getBytes(StandardCharsets.UTF_8))
                     } catch (IOException e) {
-                        throw new GradleException("Error writing file", e)
+                        throw new GradleException("Error writing wrapper.", e)
                     }
                 })
             }
@@ -131,22 +131,42 @@ class GradlePlugin implements Plugin<Project> {
                     SSH ssh = null
                     SFTP sftp = null
                     try {
-                        ssh = new SSH(ext);
-                        sftp = ssh.openFileMode();
+                        try {
+                            ssh = new SSH(ext);
+                            sftp = ssh.openFileMode();
+                        } catch (GradleException e) {
+                            throw e
+                        } catch (Exception e) {
+                            throw new GradleException("SSH connection failed", e)
+                        }
 
                         sftp.with {
-                            mkdir ext.paths.wrapperDir
-                            mkdir ext.paths.splashDir
-                            mkdir ext.paths.programDir
+                            try {
+                                mkdir ext.paths.wrapperDir
+                                mkdir ext.paths.splashDir
+                                mkdir ext.paths.programDir
+                            } catch (Exception e) {
+                                throw new GradleException("Creation of on-brick directories failed.", e)
+                            }
 
-                            put ext.localProgramPath(), ext.brickProgramPath(), 0644
-                            put ext.localSplashPath(), ext.brickSplashPath(), 0644
-                            put ext.localWrapperPath(), ext.brickWrapperPath(), 0755
+                            try {
+                                put ext.localProgramPath(), ext.brickProgramPath(), 0644
+                                put ext.localSplashPath(), ext.brickSplashPath(), 0644
+                                put ext.localWrapperPath(), ext.brickWrapperPath(), 0755
+                            } catch (Exception e) {
+                                throw new GradleException("Upload of program files failed.", e)
+                            }
 
                             ext.build.uploads.call(proj).each {
+                                Path src = it[0] as Path
+                                if (!src.toFile().exists()) {
+                                    throw new GradleException("Source file '${src.toString()}' does not exist.")
+                                }
                                 put it[0] as Path, it[1] as String, it[2] as int
                             }
                         }
+                    } catch (GradleException e) {
+                        throw e
                     } catch (Exception e) {
                         throw new GradleException("Program upload failed.", e)
                     } finally {

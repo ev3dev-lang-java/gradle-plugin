@@ -29,23 +29,30 @@ class SSH implements AutoCloseable {
     }
 
     void runStdio(String command) throws JSchException {
-        ((ChannelExec) sess.openChannel("exec")).with {
+        int status = 0;
+        try {
+            ((ChannelExec) sess.openChannel("exec")).with {
 
-            setInputStream(System.in, true)
-            setOutputStream(System.out, true)
-            setErrStream(System.err, true)
+                setInputStream(System.in, true)
+                setOutputStream(System.out, true)
+                setErrStream(System.err, true)
 
-            setCommand(command)
+                setCommand(command)
 
-            connect()
+                connect()
 
-            while (!isClosed()) {
-                try {
-                    Thread.sleep(10)
-                } catch (InterruptedException e) {
-                    e.printStackTrace()
+                while (!isClosed()) {
+                    try {
+                        Thread.sleep(10)
+                    } catch (InterruptedException e) {
+                        e.printStackTrace()
+                    }
                 }
+                status = getExitStatus();
             }
+        } catch (Exception e) {
+            throw new GradleException("Remote execution over SSH failed.", e)
+        } finally {
             if (getExitStatus() != 0) {
                 throw new GradleException("Remote command returned failure: " + getExitStatus())
             }
