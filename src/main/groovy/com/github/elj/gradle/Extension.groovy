@@ -31,8 +31,8 @@ class Extension {
         action.execute(paths)
     }
 
-    void build(Action<? super PathPreferences> action) {
-        build.execute(paths)
+    void build(Action<? super BuildPreferences> action) {
+        action.execute(build)
     }
 
 
