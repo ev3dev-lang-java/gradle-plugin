@@ -19,7 +19,11 @@ class SSH implements AutoCloseable {
         sess = ssh.getSession(user, host).with {
             setPassword(password)
             setConfig("StrictHostKeyChecking", "no")
-            connect(timeout)
+            try {
+                connect(timeout)
+            } catch (Exception e) {
+                throw new GradleException("Cannot connect to the brick.", e)
+            }
             return it
         }
     }
