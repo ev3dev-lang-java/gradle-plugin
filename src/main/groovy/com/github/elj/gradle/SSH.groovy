@@ -48,13 +48,13 @@ class SSH implements AutoCloseable {
                         e.printStackTrace()
                     }
                 }
-                status = it.getExitStatus()
+                status = getExitStatus()
             }
         } catch (Exception e) {
             throw new GradleException("Remote execution over SSH failed.", e)
         } finally {
-            if (getExitStatus() != 0) {
-                throw new GradleException("Remote command returned failure: " + getExitStatus())
+            if (status != 0) {
+                throw new GradleException("Remote command returned failure: $status")
             }
         }
     }
