@@ -10,7 +10,7 @@ class RemoteCommandTask extends DefaultTask {
 
     @TaskAction
     void runCommand() throws Exception {
-        Extension ext = this.project.ev3
+        Extension ext = this.project.brick
 
         for (String command : commands) {
 

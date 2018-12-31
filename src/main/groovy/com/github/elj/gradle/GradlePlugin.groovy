@@ -18,7 +18,7 @@ class GradlePlugin implements Plugin<Project> {
         project.pluginManager.apply(JavaPlugin)
         project.pluginManager.apply(ShadowPlugin)
 
-        Extension ext = project.extensions.create("ev3", Extension, project)
+        Extension ext = project.extensions.create("brick", Extension, project)
 
         registerInstallerTasks(ext)
         registerSystemTasks(ext)
