@@ -62,7 +62,7 @@ class Extension {
     }
 
     Path localSplashPath() {
-        return build.splashPath(proj, this)
+        return build.splashPath(proj)
     }
 
     String getJavaCommand(boolean wrapper) {

@@ -5,19 +5,19 @@ import org.gradle.api.Project
 import java.nio.file.Paths;
 
 class BuildPreferences {
-    def splashPath = { Project proj, Extension ext ->
+    def splashPath = { Project proj ->
         return Paths.get(proj.projectDir.toString(), "gradle", "splash.txt")
     }
 
-    def templateWrapper = { Project proj, Extension ext ->
+    def templateWrapper = { Project proj ->
         return """
 #!/bin/sh
-cat ${ext.brickSplashPath()}
-exec ${ext.getJavaCommand(true)}
+cat ${proj.ev3.brickSplashPath()}
+exec ${proj.ev3.getJavaCommand(true)}
 """
     }
 
-    def uploads = { Project proj, Extension ext ->
+    def uploads = { Project proj ->
         return []
     }
 }

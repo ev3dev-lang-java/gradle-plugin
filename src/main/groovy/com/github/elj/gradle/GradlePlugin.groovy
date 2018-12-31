@@ -8,6 +8,7 @@ import org.gradle.api.plugins.JavaPlugin
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 
 class GradlePlugin implements Plugin<Project> {
@@ -110,7 +111,7 @@ class GradlePlugin implements Plugin<Project> {
                 setGroup group
                 setDescription "Generate shell script wrapper for the program."
                 doLast({ task ->
-                    String contents = ext.build.templateWrapper(proj, ext)
+                    String contents = ext.build.templateWrapper(proj)
 
                     try {
                         Files.write(Paths.get(proj.buildDir.toString(), "launcher.sh"),
@@ -142,8 +143,8 @@ class GradlePlugin implements Plugin<Project> {
                             put ext.localSplashPath(), ext.brickSplashPath(), 0644
                             put ext.localWrapperPath(), ext.brickWrapperPath(), 0755
 
-                            ext.build.uploads(proj, ext).each {
-                                put it.source, it.destination, it.mode
+                            ext.build.uploads(proj).each {
+                                put it[0] as Path, it[1] as String, it[2] as int
                             }
                         }
                     } catch (Exception e) {
