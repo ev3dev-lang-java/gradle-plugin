@@ -2,10 +2,10 @@ package com.github.elj.gradle
 
 class Preferences {
     String mainClass = "please.specify.main.class"
-    String brickHost = "0.0.0.0"
-    String brickUser = "robot"
-    String brickPassword = "maker"
-    int brickTimeout = 5000
+    String sshHost = "0.0.0.0"
+    String sshUser = "robot"
+    String sshPassword = "maker"
+    int sshTimeout = 5000
 
     boolean libOpenCV = false
     boolean libRXTX = false

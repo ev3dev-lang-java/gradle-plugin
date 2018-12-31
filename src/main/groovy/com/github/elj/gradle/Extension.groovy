@@ -91,7 +91,7 @@ class Extension {
 
         if (pref.useSudo) {
             String javaCmd = javaArr.join(" ")
-            String shLine = "echo \"${pref.brickPassword}\" | sudo -S $javaCmd"
+            String shLine = "echo \"${pref.sshPassword}\" | sudo -S $javaCmd"
             String proper = shLine.replaceAll("\"", "\\\\\"")
             prefixArr += "/bin/sh -c \"$proper\""
         } else {
@@ -143,7 +143,7 @@ class Extension {
         def list = []
 
         commands.each {
-            list += "echo -e \"${-> pref.brickPassword}\" | sudo -S ${-> it.toString()}"
+            list += "echo -e \"${-> pref.sshPassword}\" | sudo -S ${-> it.toString()}"
         }
 
         return cmdTask(grpName, name, list, desc)

@@ -12,7 +12,7 @@ class SSH implements AutoCloseable {
     private Session sess = null
 
     SSH(Extension ext) {
-        this(ext.pref.brickHost, ext.pref.brickUser, ext.pref.brickPassword, ext.pref.brickTimeout)
+        this(ext.pref.sshHost, ext.pref.sshUser, ext.pref.sshPassword, ext.pref.sshTimeout)
     }
 
     SSH(String host, String user, String password, int timeout) {

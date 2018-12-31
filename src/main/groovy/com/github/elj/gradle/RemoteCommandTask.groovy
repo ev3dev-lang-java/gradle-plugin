@@ -17,7 +17,7 @@ class RemoteCommandTask extends DefaultTask {
             String msg = String.format(
                     "---> Running \"%s\" <---",
                     command.replace(
-                            ext.pref.brickPassword,
+                            ext.pref.sshPassword,
                             "********"))
 
             String echoCmd = "echo \"" + msg.replaceAll("\"", "\\\\\"") + "\""
