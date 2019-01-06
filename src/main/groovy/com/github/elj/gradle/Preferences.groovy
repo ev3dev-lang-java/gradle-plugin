@@ -5,6 +5,7 @@ class Preferences {
     String sshHost = "0.0.0.0"
     String sshUser = "robot"
     String sshPassword = "maker"
+
     int sshTimeout = 5000
 
     boolean libOpenCV = false
@@ -12,11 +13,11 @@ class Preferences {
     def libCustom = []
 
     boolean useSudo = false
-    boolean useTime = false
+    boolean useTime = true
     boolean useBrickrun = false
 
-    def jvmFlags = []
+    def jvmFlags = ["-Xms64m", "-Xmx64m", "-XX:+UseSerialGC", "-Xshare:on", "-noverify"]
 
     boolean slimJar = true
-    boolean useEmbeddedPaths = false
+    boolean useEmbeddedPaths = true
 }
