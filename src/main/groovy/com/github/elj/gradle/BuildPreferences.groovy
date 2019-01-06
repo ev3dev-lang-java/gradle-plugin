@@ -10,8 +10,7 @@ class BuildPreferences {
     }
 
     def templateWrapper = { Project proj ->
-        return """
-#!/bin/sh
+        return """#!/bin/sh
 cat ${proj.brick.brickSplashPath()}
 exec ${proj.brick.getJavaCommand(true)}
 """
