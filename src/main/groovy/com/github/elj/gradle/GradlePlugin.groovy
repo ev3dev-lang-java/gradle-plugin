@@ -95,7 +95,7 @@ class GradlePlugin implements Plugin<Project> {
                                 proj.configurations.runtime.each {
                                     Path src = it.toPath()
                                     String dst = ext.paths.libraryDir + "/" + src.fileName.toString()
-                                    int mode = 644
+                                    int mode = 0644
 
                                     put src, dst, mode
                                 }
