@@ -45,6 +45,10 @@ class Extension {
         return paths.programDir + "/" + basename() + ".jar"
     }
 
+    String brickLibraryPath() {
+        return paths.libraryDir + "/" + basename() + ".jar"
+    }
+
     String brickWrapperPath() {
         return paths.wrapperDir + "/" + basename() + ".sh"
     }

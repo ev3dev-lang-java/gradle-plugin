@@ -176,6 +176,56 @@ class GradlePlugin implements Plugin<Project> {
                 })
             }
 
+            task("deployLibrary").with {
+                setGroup group
+                setDescription "Deploy a new build of a library to the brick."
+                dependsOn "clean", "${-> ext.pref.slimJar ? "jar" : "shadowJar"}"
+
+                doLast({ task ->
+                    SSH ssh = null
+                    SFTP sftp = null
+                    try {
+                        try {
+                            ssh = new SSH(ext);
+                            sftp = ssh.openFileMode();
+                        } catch (GradleException e) {
+                            throw e
+                        } catch (Exception e) {
+                            throw new GradleException("SSH connection failed", e)
+                        }
+
+                        sftp.with {
+                            try {
+                                mkdir ext.paths.libraryDir
+                            } catch (Exception e) {
+                                throw new GradleException("Creation of on-brick directories failed.", e)
+                            }
+
+                            try {
+                                put ext.localProgramPath(), ext.brickLibraryPath(), 0644
+                            } catch (Exception e) {
+                                throw new GradleException("Upload of program files failed.", e)
+                            }
+
+                            ext.build.uploads.call(proj).each {
+                                Path src = it[0] as Path
+                                if (!src.toFile().exists()) {
+                                    throw new GradleException("Source file '${src.toString()}' does not exist.")
+                                }
+                                put it[0] as Path, it[1] as String, it[2] as int
+                            }
+                        }
+                    } catch (GradleException e) {
+                        throw e
+                    } catch (Exception e) {
+                        throw new GradleException("Program upload failed.", e)
+                    } finally {
+                        sftp?.close()
+                        ssh?.close()
+                    }
+                })
+            }
+
             task("deployRun").with {
                 setGroup group
                 setDescription "Deploy a new build of the program to the brick and then run it."
