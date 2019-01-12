@@ -20,12 +20,12 @@ class GradlePlugin implements Plugin<Project> {
 
         Extension ext = project.extensions.create("brick", Extension, project)
 
-        registerInstallerTasks(ext)
+        registerInstallerTasks(project, ext)
         registerSystemTasks(ext)
         registerDeploymentTasks(project, ext)
     }
 
-    private static void registerInstallerTasks(Extension ext) {
+    private static void registerInstallerTasks(Project proj, Extension ext) {
         final String group = "ELJ-Installer"
 
         ext.with {
@@ -64,6 +64,55 @@ class GradlePlugin implements Plugin<Project> {
             cmdTask(group, "javaVersion",
                     ["java -version"],
                     "Print Java version which is present on the brick.")
+        }
+
+        proj.with {
+            task("uploadGradleLibraries").with {
+                setGroup group
+                setDescription "Install libraries specified in the project dependencies to the brick."
+
+                doLast({ task ->
+                    SSH ssh = null
+                    SFTP sftp = null
+                    try {
+                        try {
+                            ssh = new SSH(ext);
+                            sftp = ssh.openFileMode();
+                        } catch (GradleException e) {
+                            throw e
+                        } catch (Exception e) {
+                            throw new GradleException("SSH connection failed", e)
+                        }
+
+                        sftp.with {
+                            try {
+                                mkdir ext.paths.libraryDir
+                            } catch (Exception e) {
+                                throw new GradleException("Creation of on-brick library directory failed.", e)
+                            }
+
+                            try {
+                                proj.configurations.runtime.each {
+                                    Path src = it.toPath()
+                                    String dst = ext.paths.libraryDir + "/" + src.fileName.toString()
+                                    int mode = 644
+
+                                    put src, dst, mode
+                                }
+                            } catch (Exception e) {
+                                throw new GradleException("Upload of Gradle libraries failed.", e)
+                            }
+                        }
+                    } catch (GradleException e) {
+                        throw e
+                    } catch (Exception e) {
+                        throw new GradleException("Library upload failed.", e)
+                    } finally {
+                        sftp?.close()
+                        ssh?.close()
+                    }
+                })
+            }
         }
     }
 
