@@ -7,6 +7,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 
 import java.nio.charset.StandardCharsets
+import java.nio.file.StandardCopyOption
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -200,8 +201,28 @@ class GradlePlugin implements Plugin<Project> {
 
                             try {
                                 put ext.localProgramPath(), ext.brickProgramPath(), 0644
-                                put ext.localSplashPath(), ext.brickSplashPath(), 0644
                                 put ext.localWrapperPath(), ext.brickWrapperPath(), 0755
+
+                                // provide a default splash
+                                Path splash = ext.localSplashPath()
+                                if (!Files.exists(splash)) {
+                                    System.out.println "[Using default splash, copying to a temporary file.]"
+                                    splash = Files.createTempFile("splash-", ".txt");
+
+                                    InputStream str = null
+
+                                    try {
+                                        str = GradlePlugin.class.getResourceAsStream("/splash.txt")
+                                        Files.copy(str, splash, StandardCopyOption.REPLACE_EXISTING)
+                                        put splash, ext.brickSplashPath(), 0644
+                                        Files.delete(splash)
+                                    } finally {
+                                        str?.close()
+                                    }
+                                } else {
+                                    put splash, ext.brickSplashPath(), 0644
+                                }
+
                             } catch (Exception e) {
                                 throw new GradleException("Upload of program files failed.", e)
                             }
