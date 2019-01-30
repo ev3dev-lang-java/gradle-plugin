@@ -16,7 +16,7 @@ class Preferences {
     boolean useTime = true
     boolean useBrickrun = false
 
-    def jvmFlags = ["-Xms64m", "-Xmx64m", "-XX:+UseSerialGC", "-Xshare:on", "-noverify"]
+    def jvmFlags = ["-Xms64m", "-Xmx64m", "-XX:+UseSerialGC", "-noverify"]
 
     boolean slimJar = true
     boolean useEmbeddedPaths = true
