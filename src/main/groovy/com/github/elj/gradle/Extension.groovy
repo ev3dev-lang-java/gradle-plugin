@@ -108,7 +108,7 @@ class Extension {
         def jarList = []
 
         if (pref.slimJar) {
-            proj.configurations.runtime.each { path ->
+            proj.configurations.runtimeClasspath.each { path ->
                 jarList += "file://${paths.libraryDir}/${path.getName()}"
             }
         }
