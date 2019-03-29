@@ -29,6 +29,15 @@ class SFTP implements AutoCloseable {
         }
     }
 
+    void putStream(InputStream stream, String name, String destination, int mode) throws Exception {
+        System.out.println("Uploading file from stream: " + name);
+
+        sftp.with {
+            put stream, destination, OVERWRITE
+            chmod mode, destination
+        }
+    }
+
     void mkdir(String destination) throws Exception {
         try {
             sftp.with {
