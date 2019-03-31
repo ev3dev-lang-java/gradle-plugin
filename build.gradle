@@ -1,11 +1,12 @@
 plugins {
     id 'java'
     id 'java-gradle-plugin'
+    id 'groovy'
     id 'maven-publish'
 }
 
 group 'com.github.ev3dev-lang-java'
-version '1.6.7'
+version '1.6.8'
 
 sourceCompatibility = 1.8
 
