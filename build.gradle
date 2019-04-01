@@ -2,10 +2,11 @@ plugins {
     id 'java'
     id 'java-gradle-plugin'
     id 'groovy'
+    id 'maven-publish'
 }
 
 group 'com.github.ev3dev-lang-java'
-version '1.6.5'
+version '1.6.8'
 
 sourceCompatibility = 1.8
 
@@ -25,11 +26,20 @@ jar {
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    compile group: 'com.jcraft', name: 'jsch', version: '0.1.55'
-    compile group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: '4.0.3'
-    annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation      group: 'com.jcraft',                          name: 'jsch',       version: '0.1.55'
+    implementation      group: 'com.github.jengelman.gradle.plugins', name: 'shadow',     version: '4.0.3'
+    testImplementation  group: 'junit',                               name: 'junit',      version: '4.12'
+}
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.github.ev3dev-lang-java'
+            artifactId = 'gradle-plugin'
+            version = "${version}"
+        }
+    }
 }
