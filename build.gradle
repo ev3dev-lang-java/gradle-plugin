@@ -6,9 +6,10 @@ plugins {
 }
 
 group 'com.github.ev3dev-lang-java'
-version '1.6.8'
+version '1.6.9'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     jcenter()
