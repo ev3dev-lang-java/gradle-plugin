@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'com.github.ev3dev-lang-java'
-version '1.6.9'
+version '1.6.10'
 
 sourceCompatibility = 11
 targetCompatibility = 11
