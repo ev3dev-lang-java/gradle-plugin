@@ -29,9 +29,9 @@ jar {
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation      group: 'com.jcraft',                          name: 'jsch',       version: '0.1.55'
-    implementation      group: 'com.github.jengelman.gradle.plugins', name: 'shadow',     version: '4.0.3'
-    testImplementation  group: 'junit',                               name: 'junit',      version: '4.12'
+    implementation      group: 'com.jcraft',                                    name: 'jsch',       version: '0.1.55'
+    implementation      group: 'com.github.johnrengelman.shadow.gradle.plugin', name: 'shadow',     version: '5.1.0'
+    testImplementation  group: 'junit',                                         name: 'junit',      version: '4.12'
 }
 
 
