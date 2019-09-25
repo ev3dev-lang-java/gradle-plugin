@@ -29,6 +29,18 @@ class SFTP implements AutoCloseable {
         }
     }
 
+    void putIfNonexistent(Path source, String destination, int mode) throws Exception {
+        try {
+            sftp.stat(destination)
+        } catch (SftpException ex) {
+            if (ex.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
+                put(source, destination, mode)
+            } else {
+                throw ex
+            }
+        }
+    }
+
     void putStream(InputStream stream, String name, String destination, int mode) throws Exception {
         System.out.println("Uploading file from stream: " + name);
 
