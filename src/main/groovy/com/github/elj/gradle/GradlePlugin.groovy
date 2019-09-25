@@ -29,10 +29,10 @@ class GradlePlugin implements Plugin<Project> {
 
         ext.with {
             setupTask(group, "setupEverything", "setupSmall",
-                    "All-In-One installer; installs just JRI/JRE (enough for most uses)")
+                    "All-In-One installer; installs just JRI/JRE (enough for most uses) and OpenCV/RXTX libraries.")
 
             setupTask(group, "setupEverythingExpert", "setupBig",
-                    "All-In-One installer; installs full JDK on the brick (overkill for normal use)")
+                    "All-In-One installer; installs full JDK on the brick (overkill for normal use) and OpenCV/RXTX libraries.")
         }
     }
 
