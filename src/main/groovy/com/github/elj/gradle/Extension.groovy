@@ -143,6 +143,15 @@ class Extension {
         }
     }
 
+    SetupTask setupTask(String grpName, String name, command, String desc) {
+        return proj.tasks.create(name, SetupTask).with {
+            setCommand command
+            setGroup grpName
+            setDescription desc
+            return it
+        }
+    }
+
     RemoteCommandTask sudoTask(String grpName, String name, commands, String desc) {
         def list = []
 

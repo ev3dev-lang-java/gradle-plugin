@@ -26,44 +26,14 @@ class GradlePlugin implements Plugin<Project> {
     }
 
     private static void registerInstallerTasks(Project proj, Extension ext) {
-        final String group = "ELJ-Installer"
+        final String group = "ELJ-Setup"
 
         ext.with {
-            cmdTask(group, "getInstaller",
-                    [
-                            "mkdir -p /home/robot/java",
-                            "/bin/sh -c \"if grep -i jessie /etc/os-release; then wget https://raw.githubusercontent.com/ev3dev-lang-java/installer/master/installer-jessie.sh -O /home/robot/java/installer.sh; else wget https://raw.githubusercontent.com/ev3dev-lang-java/installer/master/installer.sh -O /home/robot/java/installer.sh; fi\"",
-                            "chmod +x /home/robot/java/installer.sh"
-                    ],
-                    "Download component installer on the brick.")
+            setupTask(group, "setupEverything", "setupSmall",
+                    "All-In-One installer; installs just JRI/JRE (enough for most uses)")
 
-            sudoTask(group, "updateAPT",
-                    ["/home/robot/java/installer.sh update"],
-                    "Update APT repositories.")
-
-            cmdTask(group, "helpInstall",
-                    ["/home/robot/java/installer.sh help"],
-                    "Print the installer help.")
-
-            sudoTask(group, "installJava",
-                    ["/home/robot/java/installer.sh java"],
-                    "Install Java on the brick.")
-
-            sudoTask(group, "installOpenCV",
-                    ["/home/robot/java/installer.sh opencv"],
-                    "Install OpenCV libraries on the brick.")
-
-            sudoTask(group, "installRXTX",
-                    ["/home/robot/java/installer.sh rxtx"],
-                    "Install RXTX library on the brick.")
-
-            sudoTask(group, "installJavaLibraries",
-                    ["/home/robot/java/installer.sh javaLibs"],
-                    "Install Java libraries on the brick.")
-
-            cmdTask(group, "javaVersion",
-                    ["java -version"],
-                    "Print Java version which is present on the brick.")
+            setupTask(group, "setupEverythingExpert", "setupBig",
+                    "All-In-One installer; installs full JDK on the brick (overkill for normal use)")
         }
 
         proj.with {
@@ -115,7 +85,6 @@ class GradlePlugin implements Plugin<Project> {
             }
         }
     }
-
 
     private static void registerSystemTasks(Extension ext) {
         String group = "ELJ-System"
