@@ -88,6 +88,21 @@ a wrapper shell script for running programs from the brick menu.
 2. Add a corresponding version of the library to your project's `compileOnly` dependencies.
 3. Enable `libOpenCV` or `libRXTX` flag in the plugin configuration block.
 
+By default, the following OpenCV/RXTX versions are used:
+
+| ev3dev version | OpenCV Debian package            | OpenCV Gradle artifact          | RXTX Debian package         | RXTX Gradle artifact |
+|----------------|----------------------------------|---------------------------------|-----------------------------|----------------------|
+| Stretch        | [libopencv2.4-java (2.4.9.1)][1] | [org.openpnp:opencv:2.4.9-8][3] | [librxtx-java (2.2pre2)][5] | [see here][7]        |
+| Buster         | [libopencv3.2-java (3.2.0)][2]   | [org.openpnp:opencv:3.2.0-1][4] | [librxtx-java (2.2pre2)][6] | [see here][7]        |
+
+[1]: https://packages.debian.org/stretch/libopencv2.4-java
+[2]: https://packages.debian.org/buster/libopencv3.2-java
+[3]: https://mvnrepository.com/artifact/org.openpnp/opencv/2.4.9-8
+[4]: https://mvnrepository.com/artifact/org.openpnp/opencv/3.2.0-1
+[5]: https://packages.debian.org/stretch/librxtx-java
+[6]: https://packages.debian.org/buster/librxtx-java
+[7]: https://mvnrepository.com/artifact/org.rxtx/rxtx/2.2pre2
+
 ## All configuration options
 ### Main configuration
 ```gradle
@@ -149,7 +164,7 @@ brick.build {
         return Paths.get(proj.projectDir.toString(), "gradle", "splash.txt")
     }
 
-    // Lambda returning contents of the launcher script 
+    // Lambda returning contents of the launcher script
     templateWrapper = { Project proj ->
         return """#!/bin/sh
 cat ${proj.brick.brickSplashPath()}
