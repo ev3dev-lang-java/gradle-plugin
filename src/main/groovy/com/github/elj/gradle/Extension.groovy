@@ -35,40 +35,76 @@ class Extension {
         action.execute(build)
     }
 
-
+    /**
+     *
+     * @return
+     */
     String basename() {
         String suffix = pref.slimJar ? "" : "-all"
         return proj.name + "-" + proj.version + suffix
     }
 
+    /**
+     * Get on-brick path to the program's JAR in the program directory.
+     * @return On-brick path
+     */
     String brickProgramPath() {
         return paths.programDir + "/" + basename() + ".jar"
     }
 
+    /**
+     * Get on-brick path to the program's JAR in the library directory.
+     * @return On-brick path
+     */
     String brickLibraryPath() {
         return paths.libraryDir + "/" + basename() + ".jar"
     }
 
+    /**
+     * Get on-brick path to the program's launcher/wrapper shell script.
+     * @return On-brick path
+     */
     String brickWrapperPath() {
         return paths.wrapperDir + "/" + basename() + ".sh"
     }
 
+    /**
+     * Get on-brick path to the program's splash.
+     * @return On-brick path
+     */
     String brickSplashPath() {
         return paths.splashDir + "/" + basename() + ".txt"
     }
 
+    /**
+     * Get the path to the built program JAR.
+     * @return Local path to the program JAR.
+     */
     Path localProgramPath() {
         return Paths.get(proj.buildDir.toString(), "libs", basename() + ".jar")
     }
 
+    /**
+     * Get the path to the generated launcher shell script.
+     * @return Local path to the generated wrapper.
+     */
     Path localWrapperPath() {
         return Paths.get(proj.buildDir.toString(), "launcher.sh")
     }
 
+    /**
+     * Get the path to the splash file.
+     * @return Local path to the splash.
+     */
     Path localSplashPath() {
         return build.splashPath.call(proj)
     }
 
+    /**
+     * Generate command for running this program.
+     * @param wrapper Whether the command will be embedded into the JAR launcher on the brick
+     * @return Commandline for running the program JAR.
+     */
     String getJavaCommand(boolean wrapper) {
         def javaArr = []
         javaArr += "java"
@@ -104,6 +140,12 @@ class Extension {
         return prefixArr.join(" ")
     }
 
+    /**
+     * Generate classpath string for the current project.
+     *
+     * @param forJar Whether the classpath will be used in the JAR manifest or not.
+     * @return Java classpath string
+     */
     String getClassPath(boolean forJar) {
         def jarList = []
 
@@ -134,6 +176,15 @@ class Extension {
         }
     }
 
+    /**
+     * Create a new command-running task.
+     *
+     * @param grpName Group to add the tasks to.
+     * @param name Name of the task.
+     * @param commands List of commands to run.
+     * @param desc Description of the task
+     * @return Command-running task.
+     */
     RemoteCommandTask cmdTask(String grpName, String name, commands, String desc) {
         return proj.tasks.create(name, RemoteCommandTask).with {
             setCommands commands
@@ -143,6 +194,15 @@ class Extension {
         }
     }
 
+    /**
+     * Create a new setup.sh task.
+     *
+     * @param grpName group to add the task to.
+     * @param name Name of the task.
+     * @param command Setup subcommand to run.
+     * @param desc Description of the task.
+     * @return Setup-running task.
+     */
     SetupTask setupTask(String grpName, String name, command, String desc) {
         return proj.tasks.create(name, SetupTask).with {
             setCommand command
@@ -152,6 +212,15 @@ class Extension {
         }
     }
 
+    /**
+     * Create a new command-running task. The command will be run as root.
+     *
+     * @param grpName Group to add the tasks to.
+     * @param name Name of the task.
+     * @param commands List of commands to run.
+     * @param desc Description of the task
+     * @return Command-running task.
+     */
     RemoteCommandTask sudoTask(String grpName, String name, commands, String desc) {
         def list = []
 
@@ -162,11 +231,25 @@ class Extension {
         return cmdTask(grpName, name, list, desc)
     }
 
+    /**
+     * Create new service management tasks (stop, restart).
+     *
+     * @param grpName Group to add the tasks to.
+     * @param serviceName Name of the systemd service to control.
+     */
     void serviceTask(String grpName, String serviceName) {
         serviceTask(grpName, serviceName, "stop")
         serviceTask(grpName, serviceName, "restart")
     }
 
+    /**
+     * Create a new service management task.
+     *
+     * @param grpName Group to add the task to.
+     * @param serviceName Name of the systemd service to control.
+     * @param action Action to perform on the service -- usually start, stop, restart or status.
+     * @return Task which executes systemctl as root.
+     */
     RemoteCommandTask serviceTask(String grpName, String serviceName, String action) {
         String taskName = action + serviceName.capitalize()
         String taskDesc = "${action.capitalize()} the $serviceName service."

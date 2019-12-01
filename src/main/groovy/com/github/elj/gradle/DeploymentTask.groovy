@@ -7,6 +7,7 @@ import org.gradle.api.tasks.TaskAction
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 
 class DeploymentTask extends DefaultTask {
 
@@ -129,7 +130,7 @@ class DeploymentTask extends DefaultTask {
             if (!uploads.empty) {
                 System.out.println("/ Uploading additional files...")
                 uploads.each { it ->
-                    Path src = it[0] as Path
+                    Path src = Paths.get(it[0] as String)
                     String dst = it[1] as String
                     int mode = it[2] as Integer
 
